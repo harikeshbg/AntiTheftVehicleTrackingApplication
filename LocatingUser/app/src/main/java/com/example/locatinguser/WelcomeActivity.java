@@ -34,7 +34,7 @@ public class WelcomeActivity extends AppCompatActivity
                                       @Override
                                       public void onClick(View v)
                                       {
-                                          Intent intent = new Intent(WelcomeActivity.this, SwitchActivity.class);
+                                          Intent intent = new Intent(WelcomeActivity.this, AunthenticationActivity.class);
                                           startActivity(intent);
                                       }
                                   }

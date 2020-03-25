@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="59dp"
-        android:layout_marginTop="133dp"
+        android:layout_marginTop="130dp"
         android:layout_marginEnd="136dp"
         android:fontFamily="@font/audiowide"
         android:text="Hello There!"
@@ -19,7 +19,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/displayText" />
 
     <Button
         android:id="@+id/loginButton"
@@ -32,7 +32,7 @@
         android:height="58dp"
         android:background="@drawable/button"
         android:fontFamily="@font/audiowide"
-        android:text="Login"
+        android:text="switch on"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,6 @@
         android:background="@drawable/inputfield"
         android:ems="10"
         android:fontFamily="@font/audiowide"
-        android:hint="password"
         android:inputType="textPassword"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
@@ -70,7 +69,6 @@
         android:background="@drawable/inputfield"
         android:ems="10"
         android:fontFamily="@font/audiowide"
-        android:hint="Email ID"
         android:inputType="textEmailAddress"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/black"
@@ -119,19 +117,91 @@
         app:layout_constraintTop_toBottomOf="@+id/pwdField" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/displayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="91dp"
-        android:layout_marginTop="31dp"
-        android:layout_marginEnd="91dp"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="43dp"
         android:fontFamily="@font/audiowide"
-        android:text="Device Login"
+        android:text="Login"
         android:textColor="@color/skyblue"
         android:textSize="30sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/offbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="21dp"
+        android:layout_marginEnd="198dp"
+        android:width="155dp"
+        android:height="58dp"
+        android:background="@drawable/button"
+        android:fontFamily="@font/audiowide"
+        android:onClick="offClicked"
+        android:text="switch off"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginButton" />
+
+    <Switch
+        android:id="@+id/deviceSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dtext"
+        app:layout_constraintTop_toBottomOf="@+id/typeImage" />
+
+    <ImageView
+        android:id="@+id/typeImage"
+        android:layout_width="58dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/deviceimage" />
+
+    <Switch
+        android:id="@+id/userSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/utext"
+        app:layout_constraintTop_toBottomOf="@+id/deviceSwitch" />
+
+    <TextView
+        android:id="@+id/dtext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="283dp"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/audiowide"
+        android:text="device"
+        android:textColor="@color/skyblue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/typeImage" />
+
+    <TextView
+        android:id="@+id/utext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="296dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/audiowide"
+        android:text="User"
+        android:textColor="@color/skyblue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dtext" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
