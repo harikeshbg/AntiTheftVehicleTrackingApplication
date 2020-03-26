@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".DeviceSelectionActivity"></activity>
+        <activity android:name=".DeviceSelectionActivity"/>
         <activity android:name=".SwitchActivity" />
         <activity android:name=".InterfaceActivity" />
         <activity android:name=".AboutActivity" />

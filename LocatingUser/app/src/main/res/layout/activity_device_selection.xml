@@ -6,4 +6,82 @@
     android:layout_height="match_parent"
     tools:context=".DeviceSelectionActivity">
 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="294dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="58dp"
+        android:layout_marginTop="19dp"
+        android:layout_marginEnd="59dp"
+        android:width="300dp"
+        android:height="50dp"
+        android:background="@drawable/inputfield"
+        android:ems="10"
+        android:fontFamily="@font/audiowide"
+        android:hint="Device ID"
+        android:inputType="textPersonName"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="130dp"
+        android:layout_marginTop="90dp"
+        android:layout_marginEnd="130dp"
+        android:fontFamily="@font/audiowide"
+        android:text="Enter the device ID"
+        android:textColor="@color/skyblue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="185dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginEnd="185dp"
+        android:background="@drawable/button"
+        android:fontFamily="@font/audiowide"
+        android:text="Extract"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="88dp"
+        android:layout_marginStart="155dp"
+        android:layout_marginTop="118dp"
+        android:layout_marginEnd="156dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/placeholderlined" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="199dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="199dp"
+        android:background="@drawable/button"
+        android:fontFamily="@font/audiowide"
+        android:text="Log out"
+        android:textAllCaps="false"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 </androidx.constraintlayout.widget.ConstraintLayout>

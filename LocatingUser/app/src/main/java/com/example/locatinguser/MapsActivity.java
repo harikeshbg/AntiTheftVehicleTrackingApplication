@@ -66,8 +66,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref1= FirebaseDatabase.getInstance().getReference("DevicesLocations").child(id);
         ref1.removeValue();
-        DatabaseReference ref2=FirebaseDatabase.getInstance().getReference("OnlineDevices").child(id);
-        ref2.removeValue();
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(this, "Logging out....", Toast.LENGTH_SHORT).show();
         finish();

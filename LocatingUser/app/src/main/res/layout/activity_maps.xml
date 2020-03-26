@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".MapsActivity">
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="654dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context=".MapsActivity" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="match_parent"
-        android:layout_height="59dp"
-        android:clickable="true"
-        android:fontFamily="@font/audiowide"
-        android:gravity="center"
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="642dp"
+        android:layout_marginEnd="163dp"
         android:onClick="logoutClicked"
         android:text="Logout"
-        android:textAlignment="center"
-        android:textColor="@color/skyblue"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        tools:text="logout" />
+        android:fontFamily="@font/audiowide"
+        android:background="@drawable/button"
+        android:textAllCaps="false"
+        android:shadowRadius="@android:integer/config_longAnimTime"
+        tools:layout_editor_absoluteX="161dp"
+        tools:layout_editor_absoluteY="624dp" />
 
-</LinearLayout>
+</RelativeLayout>

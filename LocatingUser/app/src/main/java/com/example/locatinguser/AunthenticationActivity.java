@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -49,7 +50,7 @@ public class AunthenticationActivity extends AppCompatActivity
         displayText=(TextView)findViewById(R.id.displayText);
         offButton=(Button)findViewById(R.id.offbutton);
         img=(ImageView) findViewById(R.id.typeImage);
-        img.setVisibility(View.INVISIBLE);
+        img.setImageResource(R.drawable.initialusericon);
         offButton.setVisibility(View.INVISIBLE);
         userSwitch=(Switch)findViewById(R.id.userSwitch);
         deviceSwitch=(Switch)findViewById(R.id.deviceSwitch);
@@ -67,10 +68,10 @@ public class AunthenticationActivity extends AppCompatActivity
                 }
                 logmailid.setHint("Email ID");
                 logpassword.setHint("password");
-                displayText.setText("User-Login");
+                displayText.setText("User Login");
                 loginButton.setText("Login");
                 img.setVisibility(View.VISIBLE);
-                img.setImageResource(R.drawable.place);
+                img.setImageResource(R.drawable.man);
                 offButton.setVisibility(View.INVISIBLE);
                 offButton.setClickable(false);
             }
@@ -88,16 +89,20 @@ public class AunthenticationActivity extends AppCompatActivity
                 }
                 logmailid.setHint("Device ID");
                 logpassword.setHint("password");
-                displayText.setText("Device-Login");
+                displayText.setText("Device Login");
                 loginButton.setText("Switch on");
                 img.setVisibility(View.VISIBLE);
-                img.setImageResource(R.drawable.deviceimage);
+                img.setImageResource(R.drawable.gps);
                 offButton.setVisibility(View.VISIBLE);
-                offButton.setClickable(true);
+                offButton.setClickable(false);
             }
         });
         logmailid=(EditText)findViewById(R.id.mailField);
         logpassword=(EditText)findViewById(R.id.pwdField);
+        logmailid.setHint("User ID");
+        logpassword.setHint("password");
+        logmailid.setHintTextColor(getColor(R.color.grey));
+        logpassword.setHintTextColor(getColor(R.color.grey));
         loginButton=(Button)findViewById(R.id.loginButton);
         regLab=(TextView)findViewById(R.id.regDisplay);
         logBar=(ProgressBar)findViewById(R.id.logProgBar);
@@ -118,8 +123,6 @@ public class AunthenticationActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                if(deviceSwitch.isChecked())
-                {
                     final String email = logmailid.getText().toString().trim();
                     String password = logpassword.getText().toString().trim();
                     //input validation.
@@ -139,36 +142,43 @@ public class AunthenticationActivity extends AppCompatActivity
                     //authenticating the user
                     fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            if (task.isSuccessful())
+                            {
                                 Toast.makeText(AunthenticationActivity.this, "Logged in..", Toast.LENGTH_SHORT).show();
                                 logBar.setVisibility(View.INVISIBLE);
-                                startActivity(new Intent(getApplicationContext(), InterfaceActivity.class));//to move to first activity upon successful registeration
-                            } else {
-                                Toast.makeText(AunthenticationActivity.this, "Log in unsuccessful" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                logBar.setVisibility(View.INVISIBLE);
-                            }
-                            String uid = fAuth.getCurrentUser().getUid();
-                            //ref= FirebaseDatabase.getInstance().getReference("OnlineDevices").child(uid);
-                            ref = FirebaseDatabase.getInstance().getReference("OnlineDevices");
-                            Toast.makeText(AunthenticationActivity.this, "uid:" + uid, Toast.LENGTH_SHORT).show();
-                            device.setUserid(uid);
-                            device.setMailid(email);
-                            id = ref.push().getKey();
-                            ref.child(id).setValue(device);
+                                if(deviceSwitch.isChecked())
+                                {
+                                    offButton.setClickable(true);
+                                    startActivity(new Intent(getApplicationContext(), InterfaceActivity.class));//to move to first activity upon successful registration
+                                    String uid = fAuth.getCurrentUser().getUid();
+                                    //ref= FirebaseDatabase.getInstance().getReference("OnlineDevices").child(uid);
+                                    ref = FirebaseDatabase.getInstance().getReference("OnlineDevices");
+                                    Toast.makeText(AunthenticationActivity.this, "uid:" + uid, Toast.LENGTH_SHORT).show();
+                                    device.setUserid(uid);
+                                    device.setMailid(email);
+                                    id = ref.push().getKey();
+                                    ref.child(id).setValue(device);
+                                }
+                                else
+                                    if(userSwitch.isChecked())
+                                    {
+                                        startActivity(new Intent(getApplicationContext(),DeviceSelectionActivity.class));
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(AunthenticationActivity.this, "Mode not specified", Toast.LENGTH_SHORT).show();
+                                    }
+                            } else
+                                {
+                                    Toast.makeText(AunthenticationActivity.this, "Log in unsuccessful" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    logBar.setVisibility(View.INVISIBLE);
+                                }
                         }
                     });
                 }
-                else
-                    if(userSwitch.isChecked())
-                    {
 
-                    }
-                    else
-                    {
-                        Toast.makeText(AunthenticationActivity.this, "Mode not specified", Toast.LENGTH_SHORT).show();
-                    }
-            }
         });
     }
 }
