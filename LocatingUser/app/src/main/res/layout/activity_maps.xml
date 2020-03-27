@@ -27,46 +27,24 @@
         android:layout_marginStart="160dp"
         android:layout_marginTop="642dp"
         android:layout_marginEnd="163dp"
-        android:onClick="logoutClicked"
-        android:text="Logout"
         android:fontFamily="@font/audiowide"
-        android:textAllCaps="false"
+        android:onClick="userLogoutClicked"
         android:shadowRadius="@android:integer/config_longAnimTime"
+        android:text="Logout"
+        android:textAllCaps="false"
         tools:layout_editor_absoluteX="161dp"
         tools:layout_editor_absoluteY="624dp" />
 
-    <EditText
-        android:id="@+id/searchID"
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="51dp"
         android:layout_height="41dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="61dp"
-        android:layout_marginEnd="116dp"
-        android:width="160dp"
-        android:height="45dp"
-        android:background="@color/white"
-        android:drawableStart="@drawable/ic_search_black_24dp"
-        android:ems="10"
-        android:fontFamily="@font/audiowide"
-        android:hint="Device ID"
-        android:inputType="textPersonName"
-        android:textColor="@android:color/black"
-        android:textColorHint="@color/grey" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="298dp"
-        android:layout_marginTop="58dp"
-        android:layout_marginEnd="25dp"
-        android:fontFamily="@font/audiowide"
-        android:text="Go" />
+        android:layout_marginStart="346dp"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/man" />
 
 </RelativeLayout>

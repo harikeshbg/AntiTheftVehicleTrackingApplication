@@ -30,8 +30,9 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".DeviceMapsActivity"
-            android:label="@string/title_activity_device_maps"/>
+            android:name=".DeviceMapActivity"
+            android:process=":DeviceMapActivity"
+            android:label="@string/title_activity_device_map"/>
         <activity android:name=".DeviceSelectionActivity" />
         <activity android:name=".SwitchActivity" />
         <activity android:name=".InterfaceActivity" />
@@ -42,6 +43,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -52,6 +54,7 @@
 
         <activity
             android:name=".MapsActivity"
+            android:process=":MapsActivity"
             android:label="@string/title_activity_maps" />
     </application>
 

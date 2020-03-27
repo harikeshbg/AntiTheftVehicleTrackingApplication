@@ -61,14 +61,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     }
-    public void logoutClicked(View view)
+    public void userLogoutClicked(View view)
     {
         final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref1= FirebaseDatabase.getInstance().getReference("DevicesLocations").child(id);
         ref1.removeValue();
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(this, "Logging out....", Toast.LENGTH_SHORT).show();
-        finish();
         finish();
     }
     @Override
@@ -125,10 +124,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 catch (IOException e) {
                     e.printStackTrace();
                 }
-                String userid= FirebaseAuth.getInstance().getCurrentUser().getUid();
+                /*String userid= FirebaseAuth.getInstance().getCurrentUser().getUid();
                 DatabaseReference ref= FirebaseDatabase.getInstance().getReference("DevicesLocations");
                 GeoFire geoFire=new GeoFire(ref);
-                geoFire.setLocation(userid,new GeoLocation(location.getLatitude(),location.getLongitude()));
+                geoFire.setLocation(userid,new GeoLocation(location.getLatitude(),location.getLongitude()));*/
             }
 
             @Override

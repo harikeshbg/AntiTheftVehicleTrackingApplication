@@ -37,7 +37,7 @@ public class InterfaceActivity extends AppCompatActivity
                 device.setUserid(uid);
                 String id=ref.push().getKey();
                 ref.child(id).setValue(device);*/
-                startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+                startActivity(new Intent(getApplicationContext(),DeviceMapActivity.class));
             }
         });
     }
