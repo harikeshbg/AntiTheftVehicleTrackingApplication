@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -29,6 +30,10 @@ public class DeviceSelectionActivity extends AppCompatActivity
     ImageView copyButton;
     int flag;
     OnlineDevices device;
+    public void goClicked(View view)
+    {
+        startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+    }
     public void copyClicked(View view)
     {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

@@ -7,7 +7,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,22 +18,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import com.firebase.geofire.GeoFire;
-import com.firebase.geofire.GeoLocation;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.io.IOException;
 import java.util.List;
@@ -63,9 +54,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void userLogoutClicked(View view)
     {
-        final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
-        DatabaseReference ref1= FirebaseDatabase.getInstance().getReference("DevicesLocations").child(id);
-        ref1.removeValue();
         FirebaseAuth.getInstance().signOut();
         Toast.makeText(this, "Logging out....", Toast.LENGTH_SHORT).show();
         finish();
@@ -77,7 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.deviceMapfragment);
         mapFragment.getMapAsync(this);
     }
 

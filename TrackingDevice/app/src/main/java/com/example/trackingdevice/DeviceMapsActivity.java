@@ -1,4 +1,4 @@
-package com.example.locatinguser;
+package com.example.trackingdevice;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class DeviceMapActivity extends FragmentActivity implements OnMapReadyCallback
+public class DeviceMapsActivity extends FragmentActivity implements OnMapReadyCallback
 {
 
     private GoogleMap mMap;
@@ -54,7 +54,7 @@ public class DeviceMapActivity extends FragmentActivity implements OnMapReadyCal
             }
         }
     }
-    public void deviceLogoutClicked(View view)
+    public void logoutClicked(View view)
     {
         final String id=FirebaseAuth.getInstance().getCurrentUser().getUid();
         DatabaseReference ref1= FirebaseDatabase.getInstance().getReference("DevicesLocations").child(id);
@@ -67,10 +67,10 @@ public class DeviceMapActivity extends FragmentActivity implements OnMapReadyCal
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_device_map);
+        setContentView(R.layout.activity_device_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.deviceMapfragment);
+                .findFragmentById(R.id.deviceMapFragment);
         mapFragment.getMapAsync(this);
     }
 
@@ -112,6 +112,7 @@ public class DeviceMapActivity extends FragmentActivity implements OnMapReadyCal
                     if(listaddresses!=null&&listaddresses.size()>0)
                     {
                         //Toast.makeText(MapsActivity.this, "Latitude:"+location.getLatitude()+"\nLongitude:"+location.getLongitude()+"\n\n\nAddress: "+listaddresses.get(0), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeviceMapsActivity.this, "Latitude:"+location.getLatitude()+"\nLongitude:"+location.getLongitude(), Toast.LENGTH_SHORT).show();
                     }
                 }
                 catch (IOException e) {
@@ -158,4 +159,3 @@ public class DeviceMapActivity extends FragmentActivity implements OnMapReadyCal
         }
     }
 }
-
