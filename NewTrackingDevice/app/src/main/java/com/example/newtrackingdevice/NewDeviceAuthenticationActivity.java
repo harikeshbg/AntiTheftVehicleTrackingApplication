@@ -54,7 +54,7 @@ public class NewDeviceAuthenticationActivity extends AppCompatActivity
         offButton.setClickable(false);
         logmailid=(EditText)findViewById(R.id.mailField);
         logpassword=(EditText)findViewById(R.id.pwdField);
-        logmailid.setHint("User ID");
+        logmailid.setHint("Device Name");
         logpassword.setHint("password");
         logmailid.setHintTextColor(getColor(R.color.grey));
         logpassword.setHintTextColor(getColor(R.color.grey));
@@ -101,10 +101,9 @@ public class NewDeviceAuthenticationActivity extends AppCompatActivity
                     {
                         if (task.isSuccessful())
                         {
-                            Toast.makeText(NewDeviceAuthenticationActivity.this, "Logged in..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(NewDeviceAuthenticationActivity.this, "Logging in..", Toast.LENGTH_SHORT).show();
                             logBar.setVisibility(View.INVISIBLE);
                             offButton.setClickable(true);
-                            startActivity(new Intent(getApplicationContext(), InterfaceActivity.class));//to move to first activity upon successful registration
                             String uid = fAuth.getCurrentUser().getUid();
                             //ref= FirebaseDatabase.getInstance().getReference("OnlineDevices").child(uid);
                             ref = FirebaseDatabase.getInstance().getReference("OnlineDevices");
@@ -113,6 +112,7 @@ public class NewDeviceAuthenticationActivity extends AppCompatActivity
                             device.setMailid(email);
                             id = ref.push().getKey();
                             ref.child(id).setValue(device);
+                            startActivity(new Intent(getApplicationContext(), InterfaceActivity.class));//to move to first activity upon successful registration
                         } else
                         {
                             Toast.makeText(NewDeviceAuthenticationActivity.this, "Log in unsuccessful:" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

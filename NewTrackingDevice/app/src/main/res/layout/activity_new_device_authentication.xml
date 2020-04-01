@@ -5,10 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NewDeviceAuthenticationActivity">
+
     <Button
         android:id="@+id/loginButton"
-        android:layout_width="107dp"
-        android:layout_height="47dp"
+        android:layout_width="109dp"
+        android:layout_height="55dp"
         android:layout_marginStart="58dp"
         android:layout_marginLeft="58dp"
         android:layout_marginTop="15dp"
@@ -62,8 +63,8 @@
         android:width="300dp"
         android:height="50dp"
         android:background="@drawable/inputfield"
-        android:drawableStart="@drawable/ic_account_circle_black_24dp"
-        android:drawableLeft="@drawable/ic_account_circle_black_24dp"
+        android:drawableStart="@drawable/ic_phone_iphone_black_24dp"
+        android:drawableLeft="@drawable/ic_phone_iphone_black_24dp"
         android:ems="10"
         android:fontFamily="@font/audiowide"
         android:hint="Device name"
@@ -78,14 +79,14 @@
         android:id="@+id/namText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="188dp"
-        android:layout_marginTop="210dp"
+        android:layout_marginStart="196dp"
+        android:layout_marginLeft="196dp"
+        android:layout_marginTop="200dp"
         android:fontFamily="@font/audiowide"
         android:text="Not a member?"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/logProgBar"
-        android:layout_marginLeft="188dp" />
+        app:layout_constraintTop_toBottomOf="@+id/logProgBar" />
 
     <TextView
         android:id="@+id/regDisplay"
@@ -108,8 +109,8 @@
     <ProgressBar
         android:id="@+id/logProgBar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="58dp"
         android:layout_marginTop="14dp"
         android:layout_marginEnd="18dp"
         android:layout_marginRight="18dp"
@@ -135,8 +136,8 @@
 
     <Button
         android:id="@+id/offbutton"
-        android:layout_width="106dp"
-        android:layout_height="46dp"
+        android:layout_width="104dp"
+        android:layout_height="54dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="58dp"
         android:layout_marginRight="58dp"

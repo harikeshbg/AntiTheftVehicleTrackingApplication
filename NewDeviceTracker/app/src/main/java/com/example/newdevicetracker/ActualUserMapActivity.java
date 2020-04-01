@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,14 +22,19 @@ import android.widget.Toast;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
+import com.firebase.geofire.GeoQuery;
+import com.firebase.geofire.GeoQueryEventListener;
 import com.firebase.geofire.LocationCallback;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +47,10 @@ import java.util.Locale;
 public class ActualUserMapActivity extends FragmentActivity implements OnMapReadyCallback
 {
 
-    private GoogleMap mMap,mMap2;
+    private GoogleMap mMap,devrefmap,devmovmap;
     LocationManager locationManager;
     LocationListener locationListener;
+    Marker usermarker,devicemarker,refmarker,movmarker;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -54,7 +61,7 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
             {
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
                 {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,5,locationListener);
                 }
             }
         }
@@ -68,9 +75,94 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
         Toast.makeText(this, "Logging out....", Toast.LENGTH_SHORT).show();
         finish();
     }
+    public void stClicked(View view)
+    {
+        DatabaseReference ref;
+        final GeoFire geoFire;
+        EditText idTextBox=(EditText)findViewById(R.id.idTextBox);
+        if(!idTextBox.getText().toString().matches(""))
+        {
+            String deviceid = idTextBox.getText().toString();
+
+            ref = FirebaseDatabase.getInstance().getReference("DevicesLocations");
+            geoFire = new GeoFire(ref);
+            geoFire.getLocation(deviceid, new LocationCallback() {
+                @Override
+                public void onLocationResult(String key, GeoLocation location)
+                {
+                    if (location != null)
+                    {
+                        LatLng refdevloc = new LatLng(location.latitude, location.longitude);
+                        if(refmarker==null)
+                        {
+                            //refmarker=devrefmap.addMarker(new MarkerOptions().position(refdevloc).title("Device reference location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            mMap.addCircle(new CircleOptions().center(refdevloc).radius(10).strokeWidth(8f).strokeColor(Color.GREEN).fillColor(Color.argb(70,124,252,0)));
+                        }
+                        else
+                        {
+                            refmarker.remove();
+                            refmarker.setPosition(refdevloc);
+                        }
+                        GeoQuery query=geoFire.queryAtLocation(new GeoLocation(refdevloc.latitude,refdevloc.longitude),0.01);
+                        query.addGeoQueryEventListener(new GeoQueryEventListener() {
+                            @Override
+                            public void onKeyEntered(String key, GeoLocation location)
+                            {
+
+                            }
+
+                            @Override
+                            public void onKeyExited(String key)
+                            {
+                                Toast.makeText(ActualUserMapActivity.this, "Vehicle exited", Toast.LENGTH_SHORT).show();
+
+                            }
+
+                            @Override
+                            public void onKeyMoved(String key, GeoLocation location)
+                            {
+                                Toast.makeText(ActualUserMapActivity.this, "Vehicle moving", Toast.LENGTH_SHORT).show();
+                                LatLng movdevloc = new LatLng(location.latitude, location.longitude);
+                                if(movmarker==null)
+                                {
+                                    movmarker=devmovmap.addMarker(new MarkerOptions().position(movdevloc).title("Movement location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                                }
+                                else
+                                {
+                                    movmarker.remove();
+                                    movmarker.setPosition(movdevloc);
+                                }
+                            }
+
+                            @Override
+                            public void onGeoQueryReady()
+                            {
+
+                            }
+
+                            @Override
+                            public void onGeoQueryError(DatabaseError error)
+                            {
+
+                            }
+                        });
+                    } else
+                    {
+                        Toast.makeText(ActualUserMapActivity.this, "No such device is active", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
+
+    }
     public void goClicked(View view)
     {
-        EditText idTextBox=(EditText)findViewById(R.id.idTextBox);
+       EditText idTextBox=(EditText)findViewById(R.id.idTextBox);
         if(!idTextBox.getText().toString().matches(""))
         {
             String deviceid=idTextBox.getText().toString();
@@ -84,7 +176,15 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
                         if(location!=null)
                         {
                             LatLng devloc=new LatLng(location.latitude,location.longitude);
-                            mMap2.addMarker(new MarkerOptions().position(devloc).title("Device location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            if(devicemarker==null)
+                            {
+                                devicemarker=mMap.addMarker(new MarkerOptions().position(devloc).title("Device location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                            }
+                            else
+                            {
+                                devicemarker.remove();
+                                devicemarker.setPosition(devloc);
+                            }
                         }
                         else
                         {
@@ -128,15 +228,24 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-        mMap2= googleMap;
+        devrefmap=googleMap;
+        devmovmap=googleMap;
         locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        locationListener=new LocationListener() {
+        locationListener=new LocationListener()
+        {
             @Override
             public void onLocationChanged(Location location)
             {
                 LatLng spot = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.clear();
-                mMap.addMarker(new MarkerOptions().position(spot).title("Your location"));
+                if(usermarker==null)
+                {
+                    usermarker=mMap.addMarker(new MarkerOptions().position(spot).title("Your location"));
+                }
+                else
+                {
+                    usermarker.remove();
+                    usermarker.setPosition(spot);
+                }
                 mMap.isBuildingsEnabled();
                 mMap.isTrafficEnabled();
                 mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -181,7 +290,7 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
         };
         if(Build.VERSION.SDK_INT<23)
         {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,0,locationListener);
         }
         else
         {
@@ -191,7 +300,7 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
             }
             else
             {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,0,locationListener);
             }
         }
     }
