@@ -1,9 +1,11 @@
 package com.example.newdevicetracker;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -32,6 +34,7 @@ public class NewUserAuthenticationActivity extends AppCompatActivity
     OnlineDevices device;
     String id;
     ImageView img;
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class NewUserAuthenticationActivity extends AppCompatActivity
         img.setImageResource(R.drawable.gps);
         logmailid=(EditText)findViewById(R.id.mailField);
         logpassword=(EditText)findViewById(R.id.pwdField);
-        logmailid.setHint("Device Name");
+        logmailid.setHint("User ID");
         logpassword.setHint("password");
         logmailid.setHintTextColor(getColor(R.color.grey));
         logpassword.setHintTextColor(getColor(R.color.grey));

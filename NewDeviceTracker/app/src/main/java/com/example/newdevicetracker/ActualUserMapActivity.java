@@ -2,10 +2,14 @@ package com.example.newdevicetracker;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +20,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -43,14 +48,41 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ActualUserMapActivity extends FragmentActivity implements OnMapReadyCallback
 {
 
-    private GoogleMap mMap,devrefmap,devmovmap;
+    private GoogleMap mMap;
     LocationManager locationManager;
     LocationListener locationListener;
-    Marker usermarker,devicemarker,refmarker,movmarker;
+    Marker usermarker,devicemarker,refmarker;
+    EditText idTextBox;
+    String deviceid;
+    Timer timer;
+    TimerTask task;
+    String channel_id="personal notification";
+    int id=001;
+    public void startTimer()
+    {
+        if(task!=null)
+        {
+            timer.scheduleAtFixedRate(task,1000,1000);
+        }
+    }
+    public void stopTimer()
+    {
+        timer.cancel();
+    }
+    private class Sender extends TimerTask
+    {
+        @Override
+        public void run()
+        {
+           getLocation();
+        }
+    }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
     {
@@ -61,10 +93,45 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
             {
                 if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED)
                 {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,5,locationListener);
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
                 }
             }
         }
+    }
+    public void getLocation()
+    {
+        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("DevicesLocations");
+        GeoFire geoFire=new GeoFire(ref);
+        geoFire.getLocation(deviceid, new LocationCallback() {
+            @Override
+            public void onLocationResult(String key, GeoLocation location)
+            {
+                if(location!=null)
+                {
+                    LatLng devloc=new LatLng(location.latitude,location.longitude);
+                    if(devicemarker==null)
+                    {
+                        devicemarker=mMap.addMarker(new MarkerOptions().position(devloc).title("Device location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                    }
+                    else
+                    {
+                        //devicemarker.remove();
+                        devicemarker.setPosition(devloc);
+                    }
+                    //devicemarker=mMap.addMarker(new MarkerOptions().position(devloc).title("Device location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                }
+                else
+                {
+                    Toast.makeText(ActualUserMapActivity.this, "No such device is active", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError)
+            {
+
+            }
+        });
     }
     public void logoutClicked(View view)
     {
@@ -75,14 +142,35 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
         Toast.makeText(this, "Logging out....", Toast.LENGTH_SHORT).show();
         finish();
     }
+    private void createNotificationChannel()
+    {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
+        {
+            CharSequence name="Personal Notifications";
+            String description="Include all the personal notifications";
+            int  importance= NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel=new NotificationChannel(channel_id,name,importance);
+            channel.setDescription(description);
+            NotificationManager notificationManager=(NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
     public void stClicked(View view)
     {
-        DatabaseReference ref;
-        final GeoFire geoFire;
-        EditText idTextBox=(EditText)findViewById(R.id.idTextBox);
         if(!idTextBox.getText().toString().matches(""))
         {
-            String deviceid = idTextBox.getText().toString();
+            deviceid=idTextBox.getText().toString();
+            startTimer();
+        }
+        else
+        {
+            Toast.makeText(this, "Device ID not entered", Toast.LENGTH_SHORT).show();
+        }
+        DatabaseReference ref;
+        final GeoFire geoFire;
+        if(!idTextBox.getText().toString().matches(""))
+        {
+            deviceid = idTextBox.getText().toString();
 
             ref = FirebaseDatabase.getInstance().getReference("DevicesLocations");
             geoFire = new GeoFire(ref);
@@ -93,16 +181,6 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
                     if (location != null)
                     {
                         LatLng refdevloc = new LatLng(location.latitude, location.longitude);
-                        if(refmarker==null)
-                        {
-                            //refmarker=devrefmap.addMarker(new MarkerOptions().position(refdevloc).title("Device reference location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                            mMap.addCircle(new CircleOptions().center(refdevloc).radius(10).strokeWidth(8f).strokeColor(Color.GREEN).fillColor(Color.argb(70,124,252,0)));
-                        }
-                        else
-                        {
-                            refmarker.remove();
-                            refmarker.setPosition(refdevloc);
-                        }
                         GeoQuery query=geoFire.queryAtLocation(new GeoLocation(refdevloc.latitude,refdevloc.longitude),0.01);
                         query.addGeoQueryEventListener(new GeoQueryEventListener() {
                             @Override
@@ -115,23 +193,22 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
                             public void onKeyExited(String key)
                             {
                                 Toast.makeText(ActualUserMapActivity.this, "Vehicle exited", Toast.LENGTH_SHORT).show();
-
+                                createNotificationChannel();
+                                NotificationCompat.Builder builder=new NotificationCompat.Builder(ActualUserMapActivity.this,channel_id)
+                                        .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+                                        .setContentTitle("Theft notification")
+                                        .setContentText("Vehicle theft detected")
+                                        .setAutoCancel(true)
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                NotificationManagerCompat manager=NotificationManagerCompat.from(ActualUserMapActivity.this);
+                                manager.notify(id,builder.build());
                             }
 
                             @Override
                             public void onKeyMoved(String key, GeoLocation location)
                             {
-                                Toast.makeText(ActualUserMapActivity.this, "Vehicle moving", Toast.LENGTH_SHORT).show();
-                                LatLng movdevloc = new LatLng(location.latitude, location.longitude);
-                                if(movmarker==null)
-                                {
-                                    movmarker=devmovmap.addMarker(new MarkerOptions().position(movdevloc).title("Movement location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                                }
-                                else
-                                {
-                                    movmarker.remove();
-                                    movmarker.setPosition(movdevloc);
-                                }
+                                Toast.makeText(ActualUserMapActivity.this, "Vehicle moving inside", Toast.LENGTH_SHORT).show();
+                                //getLocation();
                             }
 
                             @Override
@@ -160,48 +237,42 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
         }
 
     }
+
     public void goClicked(View view)
     {
-       EditText idTextBox=(EditText)findViewById(R.id.idTextBox);
         if(!idTextBox.getText().toString().matches(""))
         {
-            String deviceid=idTextBox.getText().toString();
-
-            DatabaseReference ref= FirebaseDatabase.getInstance().getReference("DevicesLocations");
-            GeoFire geoFire=new GeoFire(ref);
-                geoFire.getLocation(deviceid, new LocationCallback() {
-                    @Override
-                    public void onLocationResult(String key, GeoLocation location)
-                    {
-                        if(location!=null)
-                        {
-                            LatLng devloc=new LatLng(location.latitude,location.longitude);
-                            if(devicemarker==null)
-                            {
-                                devicemarker=mMap.addMarker(new MarkerOptions().position(devloc).title("Device location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
-                            }
-                            else
-                            {
-                                devicemarker.remove();
-                                devicemarker.setPosition(devloc);
-                            }
-                        }
-                        else
-                        {
-                            Toast.makeText(ActualUserMapActivity.this, "No such device is active", Toast.LENGTH_SHORT).show();
-                        }
+            deviceid = idTextBox.getText().toString();
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("DevicesLocations");
+            GeoFire geoFire = new GeoFire(ref);
+            geoFire.getLocation(deviceid, new LocationCallback() {
+                @Override
+                public void onLocationResult(String key, GeoLocation location) {
+                    LatLng refdevloc = new LatLng(location.latitude, location.longitude);
+                    if (refmarker == null) {
+                        refmarker = mMap.addMarker(new MarkerOptions().position(refdevloc).title("Device reference location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                        mMap.addCircle(new CircleOptions().center(refdevloc).radius(10).strokeWidth(8f).strokeColor(Color.BLUE).fillColor(Color.argb(70, 153, 204, 255)));
+                    } else {
+                        refmarker.remove();
+                        refmarker.setPosition(refdevloc);
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError)
-                    {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-                    }
-                });
+                }
+            });
+            /*if (!idTextBox.getText().toString().matches("")) {
+                deviceid = idTextBox.getText().toString();
+                startTimer();
+            } else {
+                Toast.makeText(this, "Device ID not entered", Toast.LENGTH_SHORT).show();
+            }*/
         }
         else
         {
-            Toast.makeText(this, "Device ID not entered", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ActualUserMapActivity.this, "No such device is active", Toast.LENGTH_SHORT).show();
         }
     }
     @Override
@@ -212,6 +283,9 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.userMapFragment);
         mapFragment.getMapAsync(this);
+        idTextBox=(EditText)findViewById(R.id.idTextBox);
+        timer=new Timer();
+        task=new Sender();
     }
 
 
@@ -228,8 +302,6 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
     public void onMapReady(GoogleMap googleMap)
     {
         mMap = googleMap;
-        devrefmap=googleMap;
-        devmovmap=googleMap;
         locationManager=(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         locationListener=new LocationListener()
         {
@@ -243,7 +315,7 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
                 }
                 else
                 {
-                    usermarker.remove();
+                    //usermarker.remove();
                     usermarker.setPosition(spot);
                 }
                 mMap.isBuildingsEnabled();
@@ -300,7 +372,7 @@ public class ActualUserMapActivity extends FragmentActivity implements OnMapRead
             }
             else
             {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1,0,locationListener);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
             }
         }
     }
